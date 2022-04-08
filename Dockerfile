@@ -44,6 +44,7 @@ RUN npm ci
 COPY src src
 COPY __scripts__ __scripts__
 
+
 RUN npm run build
 
 
@@ -56,7 +57,9 @@ FROM deps as deploy
 USER scrape
 
 # Steal compiled code from build image
-COPY --from=build /usr/app/dist ./dist 
+RUN mkdir -p ./build
+COPY --from=build /usr/app/dist ./build/dist 
+COPY --from=build /usr/app/__scripts__ ./build/__scripts__ 
 
 LABEL org.opencontainers.image.title="bow-and-scrape" \ 
     org.opencontainers.image.url="https://github.com/artisin/bow-and-scrape" \
@@ -73,8 +76,10 @@ ENV NODE_ENV=production \
 ENV    PORT 8080
 EXPOSE $PORT
 
-VOLUME [ "/bow-and-scrape" ]
+WORKDIR /build
+VOLUME /build
+
 
 ENTRYPOINT ["tini", "--"]
 
-CMD ["node", "__scripts__/server.js"]
+CMD ["node", "./__scripts__/server.js"]
