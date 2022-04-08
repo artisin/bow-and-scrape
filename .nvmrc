@@ -1,0 +1,9 @@
+hoist-pattern[]=*eslint*
+hoist-pattern[]=*ts-node*
+hoist-pattern[]=*babel*
+hoist-pattern[]=*lowdb*
+
+public-hoist-pattern[]=eslint_d
+public-hoist-pattern[]=concurrently
+public-hoist-pattern[]=*secret-agent*
+public-hoist-pattern[]=*@secret-agent*
