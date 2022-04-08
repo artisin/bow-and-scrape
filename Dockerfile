@@ -12,7 +12,7 @@ FROM base as deps
 
 RUN apt-get update \
     && apt-get install -y \
-    dumb-init \
+     wget \
     && rm -rf /var/lib/apt/lists/*
 
 
