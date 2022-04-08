@@ -23,6 +23,7 @@ RUN npm ci --only=production && $(npx install-browser-deps) \
     && groupadd -r scrape \
     && useradd -r -g scrape -G audio,video scrape \
     && mkdir -p /home/scrape/Downloads \
+    && mkdir -p /home/scrape/build \
     && mkdir -p /home/scrape/.cache \
     && chown -R scrape:scrape /home/scrape \
     && mv ~/.cache/secret-agent /home/scrape/.cache/ \
@@ -57,7 +58,6 @@ FROM deps as deploy
 USER scrape
 
 # Steal compiled code from build image
-RUN mkdir -p ./build
 COPY --from=build /usr/app/dist ./build/dist 
 COPY --from=build /usr/app/__scripts__ ./build/__scripts__ 
 
