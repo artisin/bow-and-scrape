@@ -69,7 +69,7 @@ RUN apt-get update \
     && apt-get install -y \
      vim
 # Add below to run as unprivileged user.
-USER scrape
+# USER scrape
 
 
 # Steal compiled code from build image
