@@ -15,12 +15,10 @@ RUN apt-get update \
     tini \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install --global yarn
-
 # Copy package.json for version number
 COPY package*.json ./
 
-RUN yarn install --production && $(npx install-browser-deps) \
+RUN npm ci --only=production && $(npx install-browser-deps) \
     # Heavy inspiration from: https://github.com/ulixee/secret-agent/blob/main/Dockerfile
     && groupadd -r scrape \
     && useradd -r -g scrape -G audio,video scrape \
@@ -40,7 +38,7 @@ FROM base as build
 COPY package*.json tsconfig.json ./
 
 # Add dev deps
-RUN yarn install
+RUN npm ci
 
 # Copy source code
 COPY src src
