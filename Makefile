@@ -1,4 +1,4 @@
-include .env
+include shared/.shared-env
 export $(shell sed 's/=.*//' .env)
 
 # Make this help target the default target
