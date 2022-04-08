@@ -65,6 +65,9 @@ COPY --from=build /usr/bin/make /usr/bin/make
 ENV    PORT 80
 EXPOSE $PORT
 
+RUN apt-get update \
+    && apt-get install -y \
+     vim
 # Add below to run as unprivileged user.
 USER scrape
 
