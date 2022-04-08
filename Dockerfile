@@ -42,6 +42,7 @@ RUN npm ci
 
 # Copy source code
 COPY src src
+COPY __scripts__ __scripts__
 
 RUN npm run build
 
