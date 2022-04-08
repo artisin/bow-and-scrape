@@ -15,6 +15,10 @@ RUN apt-get update \
      wget \
     && rm -rf /var/lib/apt/lists/*
 
+# https://github.com/Yelp/dumb-init
+RUN wget -O /usr/local/bin/dumb-init \
+      https://github.com/Yelp/dumb-init/releases/download/v1.1.3/dumb-init_1.2.5_amd64 && \
+    chmod +x /usr/local/bin/dumb-init
 
 # Copy package.json for version number
 COPY package*.json ./
@@ -29,11 +33,7 @@ RUN npm ci --only=production && $(npx install-browser-deps) \
     && chown -R scrape:scrape /home/scrape \
     && mv ~/.cache/secret-agent /home/scrape/.cache/ \
     && chmod 777 /tmp \
-    && chmod -R 777 /home/scrape/.cache/secret-agent \
-    # https://github.com/Yelp/dumb-init
-    wget -O /usr/local/bin/dumb-init \
-      https://github.com/Yelp/dumb-init/releases/download/v1.1.3/dumb-init_1.2.5_amd64 && \
-    chmod +x /usr/local/bin/dumb-init
+    && chmod -R 777 /home/scrape/.cache/secret-agent
 
 ########
 # BUILD
