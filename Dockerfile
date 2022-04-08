@@ -40,7 +40,7 @@ FROM base as build
 COPY package*.json tsconfig.json ./
 
 # Add dev deps
-RUN npm ci
+RUN yarn install
 
 # Copy source code
 COPY src src
