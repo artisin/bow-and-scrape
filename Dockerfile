@@ -50,7 +50,7 @@ RUN npm ci
 # Copy source code
 COPY src src
 
-RUN make build
+RUN npm run build
 
 
 ########
