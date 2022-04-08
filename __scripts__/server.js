@@ -4,10 +4,15 @@ const concurrently = require('concurrently');
 const path = require('path');
 
 const run = () => {
+  const DIR = __dirname;
+  const cwd = path.resolve(path.join(DIR, '../'));
+  const isDist = cwd?.includes('/dist');
+  const cmd = `node  ./${isDist ? 'src' : 'dist/src'}/index.js`
+  console.log(`script:server.js -> \n[isDist=${isDist}]\n[cmd=${cmd}]\n[cwd=${cwd}]`)
   const { result } = concurrently([{
     name: 'server',
-    command: 'node ./dist/index.js',
-    cwd: path.resolve(path.join(__dirname, '../'))
+    command: cmd,
+    cwd,
   }], {
     prefix: 'server',
     killOthers: ['failure'],

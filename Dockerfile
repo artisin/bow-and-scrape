@@ -41,16 +41,15 @@ RUN npm ci --only=production && $(npx install-browser-deps) \
 FROM base as build
 
 # Copy all source files
-COPY package*.json tsconfig.json ./
+COPY Makefile package*.json tsconfig.json ./
 
 # Add dev deps
 RUN npm ci
 
 # Copy source code
 COPY src src
-COPY __scripts__ __scripts__
 
-RUN npm run build
+RUN make build
 
 
 ########
@@ -64,7 +63,6 @@ USER scrape
 
 # Steal compiled code from build image
 COPY --from=build /usr/app/dist ./build/dist 
-COPY --from=build /usr/app/__scripts__ ./build/__scripts__
 
 
 LABEL org.opencontainers.image.title="bow-and-scrape" \ 
