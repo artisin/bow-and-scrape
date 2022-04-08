@@ -83,7 +83,7 @@ ENV    PORT 8080
 EXPOSE $PORT
 
 
-ENTRYPOINT ["/home/scrape/dumb-init", "--"]
+ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
 
-CMD ["node"]
+# CMD ["node"]
 # CMD ["node", "./__scripts__/server.js"]
