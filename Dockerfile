@@ -12,8 +12,9 @@ FROM base as deps
 
 RUN apt-get update \
     && apt-get install -y \
-    tini \
+    dumb-init \
     && rm -rf /var/lib/apt/lists/*
+
 
 # Copy package.json for version number
 COPY package*.json ./
@@ -22,6 +23,7 @@ RUN npm ci --only=production && $(npx install-browser-deps) \
     # Heavy inspiration from: https://github.com/ulixee/secret-agent/blob/main/Dockerfile
     && groupadd -r scrape \
     && useradd -r -g scrape -G audio,video scrape \
+    && mkdir -p /home/scrape/bin \
     && mkdir -p /home/scrape/Downloads \
     && mkdir -p /home/scrape/build \
     && mkdir -p /home/scrape/.cache \
@@ -34,6 +36,10 @@ RUN npm ci --only=production && $(npx install-browser-deps) \
 # BUILD
 ########
 FROM base as build
+
+# https://github.com/Yelp/dumb-init
+RUN wget -O  /home/scrape/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64
+RUN chmod +x  /home/scrape/dumb-init
 
 # Copy all source files
 COPY package*.json tsconfig.json ./
@@ -80,6 +86,7 @@ WORKDIR /build
 VOLUME /build
 
 
-ENTRYPOINT ["tini", "--"]
+ENTRYPOINT ["/home/scrape/dumb-init", "--"]
 
-CMD ["node", "./__scripts__/server.js"]
+CMD ["node"]
+# CMD ["node", "./__scripts__/server.js"]
