@@ -46,6 +46,7 @@ COPY --from=deps /usr/bin/make /usr/bin/make
 # Copy all source files
 COPY package*.json ./
 COPY tsconfig.json ./
+COPY .env ./
 COPY Makefile ./
 COPY __scripts__ __scripts__
 COPY src src
@@ -72,6 +73,7 @@ USER scrape
 # Steal compiled code from build image
 COPY --from=build /usr/app/dist ./dist
 COPY --from=build /usr/app/Makefile ./
+COPY --from=build /usr/app/.env ./
 
 LABEL org.opencontainers.image.title="bow-and-scrape" \ 
     org.opencontainers.image.url="https://github.com/artisin/bow-and-scrape" \
