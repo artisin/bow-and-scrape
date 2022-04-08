@@ -24,8 +24,8 @@ RUN wget -O /usr/local/bin/dumb-init \
 # Copy package.json for version number
 COPY package*.json ./
 
+# Heavy inspiration from: https://github.com/ulixee/secret-agent/blob/main/Dockerfile
 RUN npm ci --only=production && $(npx install-browser-deps) \
-    # Heavy inspiration from: https://github.com/ulixee/secret-agent/blob/main/Dockerfile
     && groupadd -r scrape \
     && useradd -r -g scrape -G audio,video scrape \
     && mkdir -p /home/scrape/Downloads \
@@ -41,31 +41,33 @@ RUN npm ci --only=production && $(npx install-browser-deps) \
 ########
 FROM base as build
 
+COPY --from=deps /usr/bin/make /usr/bin/make
+
 # Copy all source files
-COPY package.json ./
-COPY package-lock.json ./
+COPY package*.json ./
 COPY tsconfig.json ./
 COPY Makefile ./
+COPY __scripts__ __scripts__
 COPY src src
 
-# Add dev deps
+# Add/build dev deps
 RUN npm ci
-
-RUN npm run build
+RUN make build
 
 
 ########
 # DEPLOY
 ########
 FROM deps as deploy
+COPY --from=build /usr/bin/make /usr/bin/make
 
 # Add below to run as unprivileged user.
 USER scrape
 
 
 # Steal compiled code from build image
-COPY --from=build /usr/app/dist ./dist 
-
+COPY --from=build /usr/app/dist ./dist
+COPY --from=build /usr/app/Makefile ./
 
 LABEL org.opencontainers.image.title="bow-and-scrape" \ 
     org.opencontainers.image.url="https://github.com/artisin/bow-and-scrape" \
@@ -82,6 +84,7 @@ ENV NODE_ENV=production \
 ENV    PORT 8080
 EXPOSE $PORT
 
+RUN make help
 
 # ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
 ENTRYPOINT ["tail", "-f", "/dev/null"]

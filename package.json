@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Scrape with secret-agent",
   "scripts": {
-    "build": "tsc",
+    "build": "node ./node_modules/typescript/bin/tsc",
     "dev:start": "ts-node src/index.ts",
     "ts:types:dry": "npx typesync --dry",
     "ts:types": "npx typesync"
