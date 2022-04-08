@@ -17,7 +17,7 @@ RUN apt-get update \
 
 # https://github.com/Yelp/dumb-init
 RUN wget -O /usr/local/bin/dumb-init \
-      https://github.com/Yelp/dumb-init/releases/download/v1.1.3/dumb-init_1.2.5_amd64 && \
+      https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64 && \
     chmod +x /usr/local/bin/dumb-init
 
 # Copy package.json for version number
