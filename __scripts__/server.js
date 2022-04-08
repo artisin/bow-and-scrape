@@ -7,7 +7,7 @@ const run = () => {
   const DIR = __dirname;
   const cwd = path.resolve(path.join(DIR, '../'));
   const isDist = cwd?.includes('/dist');
-  const cmd = `node  ./${isDist ? 'src' : 'dist/src'}/index.js`
+  const cmd = `node  ${isDist ? '' : './dist/src/'}index.js`
   console.log(`script:server.js -> \n[isDist=${isDist}]\n[cmd=${cmd}]\n[cwd=${cwd}]`)
   const { result } = concurrently([{
     name: 'server',
@@ -16,7 +16,7 @@ const run = () => {
   }], {
     prefix: 'server',
     killOthers: ['failure'],
-    restartTries: process.env.restartTries ?? 100,
+    restartTries: process.env.restartTries ?? 1,
   });
   result.then(res => {
     console.log(`OK:server.js`, res)

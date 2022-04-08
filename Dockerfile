@@ -60,6 +60,10 @@ RUN make build
 ########
 FROM deps as deploy
 COPY --from=build /usr/bin/make /usr/bin/make
+RUN mkdir -p ./shared-dbs
+
+ENV    PORT 80
+EXPOSE $PORT
 
 # Add below to run as unprivileged user.
 USER scrape
@@ -81,8 +85,6 @@ ENV NODE_ENV=production \
     CACHE_DIR=/bow-and-scrape \
     COMMIT_SHA=${COMMIT_SHA}
 
-ENV    PORT 8080
-EXPOSE $PORT
 
 RUN make help
 
